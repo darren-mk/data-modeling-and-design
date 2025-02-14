@@ -45,9 +45,8 @@ coerceLastName = validateName
 
 coerceSsn :: String -> Maybe SocialSecurityNumber
 coerceSsn s =
-  let pattern = "^d{3}-d{2}-d{4}$"
-  in if s =~ pattern
-     then Just s else Nothing
+  let pattern = "^\\d{3}-\\d{2}-\\d{4}$"
+  in if s =~ pattern then Just s else Nothing
 
 coerceMaritalStatus :: String -> Maybe MaritalStatus
 coerceMaritalStatus s = case map toLower s of
@@ -60,14 +59,14 @@ coerceMaritalStatus s = case map toLower s of
 
 coercePhoneNumber :: String -> Maybe PhoneNumber
 coercePhoneNumber s =
-    let pattern = "^\\+?\\d{1,3}[-.\\s]?\\(?\\d{1,4}\\)?[-.\\s]?\\d{3,4}[-.\\s]?\\d{4}$"
-    in if s =~ pattern then Just s else Nothing
+  let pattern = "^\\+?\\d{1,3}[-.\\s]?\\(?\\d{1,4}\\)?[-.\\s]?\\d{3,4}[-.\\s]?\\d{4}$"
+  in if s =~ pattern then Just s else Nothing
 
 validatePersonData :: PersonInEditing -> Maybe Person
 validatePersonData pie = do
   fn <- coerceFirstName =<< firstNameStr pie
   ln <- coerceLastName =<< lastNameStr pie
-  ssn <- coerceSsn =<< lastNameStr pie
+  ssn <- coerceSsn =<< ssnStr pie
   ms <- coerceMaritalStatus =<< maritalStatusStr pie
   pn <- coercePhoneNumber =<< phoneNumberStr pie
   return $ Person fn ln ssn ms pn
