@@ -1,7 +1,7 @@
-module Lib (someFunc, coercePhoneNumber) where
+module Lib (someFunc, coercePhoneNumber, coerceSsn, validateName) where
 
 import Data.Char (toLower)
-import Text.Regex.TDFA ( (=~) )
+import Text.Regex.Posix ( (=~) )
 
 data MaritalStatus
   = Single
@@ -42,10 +42,15 @@ coerceFirstName = validateName
 coerceLastName :: String -> Maybe LastName
 coerceLastName = validateName
 
+simplifiedDigitsRegex :: String
+simplifiedDigitsRegex = "^[0-9-]+$"
+
+coerceDigitsSimplified :: String -> Maybe String
+coerceDigitsSimplified s =
+  if s =~ simplifiedDigitsRegex then Just s else Nothing
+
 coerceSsn :: String -> Maybe SocialSecurityNumber
-coerceSsn s =
-  let pattern = "^\\d{3}-\\d{2}-\\d{4}$"
-  in if s =~ pattern then Just s else Nothing
+coerceSsn = coerceDigitsSimplified
 
 coerceMaritalStatus :: String -> Maybe MaritalStatus
 coerceMaritalStatus s = case map toLower s of
@@ -57,9 +62,7 @@ coerceMaritalStatus s = case map toLower s of
   _ -> Nothing
 
 coercePhoneNumber :: String -> Maybe PhoneNumber
-coercePhoneNumber s =
-  let pattern = "^\\+?\\d{1,3}[-.\\s]?\\(?\\d{1,4}\\)?[-.\\s]?\\d{3,4}[-.\\s]?\\d{4}$"
-  in if s =~ pattern then Just s else Nothing
+coercePhoneNumber = coerceDigitsSimplified
 
 validatePersonData :: PersonInEditing -> Maybe Person
 validatePersonData pie = do
@@ -79,9 +82,9 @@ someFunc :: IO ()
 someFunc = do
   fns <- prompt "Enter first name:"
   lns <- prompt "Enter last name:"
-  ssns <- prompt "Enter SSN:"
-  mss <- prompt "Enter married status:"
-  pns <- prompt "Enter phone number:"
+  ssns <- prompt "Enter SSN (e.g. 111-22-3333):"
+  mss <- prompt "Enter married status (e.g. married, single):"
+  pns <- prompt "Enter phone number (e.g. 123-456-7890):"
   let personInEditing = PersonInEditing
                         { firstNameStr = Just fns
                         , lastNameStr = Just lns
@@ -91,6 +94,6 @@ someFunc = do
   let result = validatePersonData personInEditing
   let msg = case result of
         Just person -> 
-          "good!" ++ firstName person
+          "Good, " ++ firstName person ++ " " ++ lastName person 
         Nothing -> "bad!"
   putStrLn msg
