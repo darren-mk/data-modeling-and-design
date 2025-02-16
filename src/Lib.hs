@@ -1,10 +1,6 @@
-module Lib
-    ( someFunc
-    ) where
+module Lib (someFunc, coercePhoneNumber) where
 
-import System.IO
 import Data.Char (toLower)
-import Data.Maybe (Maybe(..))
 import Text.Regex.TDFA ( (=~) )
 
 data MaritalStatus
@@ -40,7 +36,10 @@ validateName s =
   let pattern = "^[A-Z][a-zA-Z' -]{1,98}[a-zA-Z]$"
   in if s =~ pattern then Just s else Nothing
 
+coerceFirstName :: String -> Maybe FirstName
 coerceFirstName = validateName
+
+coerceLastName :: String -> Maybe LastName
 coerceLastName = validateName
 
 coerceSsn :: String -> Maybe SocialSecurityNumber
@@ -71,18 +70,18 @@ validatePersonData pie = do
   pn <- coercePhoneNumber =<< phoneNumberStr pie
   return $ Person fn ln ssn ms pn
 
+prompt :: String -> IO String
+prompt message = do
+  putStrLn message
+  getLine
+
 someFunc :: IO ()
 someFunc = do
-  putStrLn "enter first name:"
-  fns <- getLine
-  putStrLn "enter last name:"
-  lns <- getLine
-  putStrLn "enter ssn:"
-  ssns <- getLine
-  putStrLn "enter married status:"
-  mss <- getLine
-  putStrLn "enter phone number:"
-  pns <- getLine
+  fns <- prompt "Enter first name:"
+  lns <- prompt "Enter last name:"
+  ssns <- prompt "Enter SSN:"
+  mss <- prompt "Enter married status:"
+  pns <- prompt "Enter phone number:"
   let personInEditing = PersonInEditing
                         { firstNameStr = Just fns
                         , lastNameStr = Just lns
@@ -91,6 +90,7 @@ someFunc = do
                         , phoneNumberStr = Just pns }
   let result = validatePersonData personInEditing
   let msg = case result of
-        Just _ -> "good!"
+        Just person -> 
+          "good!" ++ firstName person
         Nothing -> "bad!"
   putStrLn msg
