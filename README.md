@@ -1,1 +1,2 @@
-# data-modeling-and-design-assignment-hs
+# data-modeling-and-design
+## by Darren Kim

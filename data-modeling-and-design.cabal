@@ -4,11 +4,11 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 
-name:           data-modeling-and-design-assignment-hs
+name:           data-modeling-and-design
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/data-modeling-and-design-assignment-hs#readme>
-homepage:       https://github.com/githubuser/data-modeling-and-design-assignment-hs#readme
-bug-reports:    https://github.com/githubuser/data-modeling-and-design-assignment-hs/issues
+description:    Please see the README on GitHub at <https://github.com/githubuser/data-modeling-and-design#readme>
+homepage:       https://github.com/githubuser/data-modeling-and-design#readme
+bug-reports:    https://github.com/githubuser/data-modeling-and-design/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2025 Author name here
@@ -21,15 +21,15 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/data-modeling-and-design-assignment-hs
+  location: https://github.com/githubuser/data-modeling-and-design
 
 library
   exposed-modules:
       Lib
   other-modules:
-      Paths_data_modeling_and_design_assignment_hs
+      Paths_data_modeling_and_design
   autogen-modules:
-      Paths_data_modeling_and_design_assignment_hs
+      Paths_data_modeling_and_design
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
@@ -38,33 +38,33 @@ library
     , regex-tdfa
   default-language: Haskell2010
 
-executable data-modeling-and-design-assignment-hs-exe
+executable data-modeling-and-design-exe
   main-is: Main.hs
   other-modules:
-      Paths_data_modeling_and_design_assignment_hs
+      Paths_data_modeling_and_design
   autogen-modules:
-      Paths_data_modeling_and_design_assignment_hs
+      Paths_data_modeling_and_design
   hs-source-dirs:
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , data-modeling-and-design-assignment-hs
+    , data-modeling-and-design
     , regex-tdfa
   default-language: Haskell2010
 
-test-suite data-modeling-and-design-assignment-hs-test
+test-suite data-modeling-and-design-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_data_modeling_and_design_assignment_hs
+      Paths_data_modeling_and_design
   autogen-modules:
-      Paths_data_modeling_and_design_assignment_hs
+      Paths_data_modeling_and_design
   hs-source-dirs:
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , data-modeling-and-design-assignment-hs
+    , data-modeling-and-design
     , regex-tdfa
   default-language: Haskell2010

@@ -1,4 +1,4 @@
-# Changelog for `data-modeling-and-design-assignment-hs`
+# Changelog for `data-modeling-and-design`
 
 All notable changes to this project will be documented in this file.
 
