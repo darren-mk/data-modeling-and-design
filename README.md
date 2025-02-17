@@ -3,5 +3,5 @@
 
 ### How to run the application
 ```shell
-stack run
+cabal run
 ```
