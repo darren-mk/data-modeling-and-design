@@ -1,4 +1,4 @@
-module Lib (someFunc, coercePhoneNumber, coerceSsn, validateName) where
+module Lib (core) where
 
 import Data.Char (toLower)
 import Text.Regex.Posix ( (=~) )
@@ -9,6 +9,7 @@ data MaritalStatus
   | Divorced
   | Widowed
   | Separated
+  deriving (Show)
 
 type FirstName = String
 type LastName = String
@@ -42,15 +43,10 @@ coerceFirstName = validateName
 coerceLastName :: String -> Maybe LastName
 coerceLastName = validateName
 
-simplifiedDigitsRegex :: String
-simplifiedDigitsRegex = "^[0-9-]+$"
-
-coerceDigitsSimplified :: String -> Maybe String
-coerceDigitsSimplified s =
-  if s =~ simplifiedDigitsRegex then Just s else Nothing
-
 coerceSsn :: String -> Maybe SocialSecurityNumber
-coerceSsn = coerceDigitsSimplified
+coerceSsn s =
+  if s =~ "^[0-9]{3}-[0-9]{2}-[0-9]{4}$"
+  then Just s else Nothing
 
 coerceMaritalStatus :: String -> Maybe MaritalStatus
 coerceMaritalStatus s = case map toLower s of
@@ -62,26 +58,28 @@ coerceMaritalStatus s = case map toLower s of
   _ -> Nothing
 
 coercePhoneNumber :: String -> Maybe PhoneNumber
-coercePhoneNumber = coerceDigitsSimplified
+coercePhoneNumber s =
+  if s =~ "^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+  then Just s else Nothing
 
 validatePersonData :: PersonInEditing -> Maybe Person
 validatePersonData pie = do
   fn <- coerceFirstName =<< firstNameStr pie
   ln <- coerceLastName =<< lastNameStr pie
-  ssn <- coerceSsn =<< ssnStr pie
+  sn <- coerceSsn =<< ssnStr pie
   ms <- coerceMaritalStatus =<< maritalStatusStr pie
   pn <- coercePhoneNumber =<< phoneNumberStr pie
-  return $ Person fn ln ssn ms pn
+  return $ Person fn ln sn ms pn
 
 prompt :: String -> IO String
 prompt message = do
   putStrLn message
   getLine
 
-someFunc :: IO ()
-someFunc = do
-  fns <- prompt "Enter first name:"
-  lns <- prompt "Enter last name:"
+core :: IO ()
+core = do
+  fns <- prompt "Enter first name (e.g. Darren):"
+  lns <- prompt "Enter last name (e.g. Kim):"
   ssns <- prompt "Enter SSN (e.g. 111-22-3333):"
   mss <- prompt "Enter married status (e.g. married, single):"
   pns <- prompt "Enter phone number (e.g. 123-456-7890):"
@@ -94,6 +92,10 @@ someFunc = do
   let result = validatePersonData personInEditing
   let msg = case result of
         Just person -> 
-          "Good, " ++ firstName person ++ " " ++ lastName person 
-        Nothing -> "bad!"
+          "Validated: " ++ firstName person
+          ++ " " ++ lastName person ++ "("
+          ++ ssn person ++ ", "
+          ++ show (maritalStatus person) ++ ", "
+          ++ phoneNumber person ++ ")"
+        Nothing -> "Your entry isn't validated."
   putStrLn msg
